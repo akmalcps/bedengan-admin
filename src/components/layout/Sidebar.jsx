@@ -1,19 +1,21 @@
 import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { 
-  LayoutDashboard, 
-  Map, 
-  UtensilsCrossed, 
-  Tent, 
-  Camera, 
-  ClipboardList, 
+import {
+  LayoutDashboard,
+  Tent,
+  Utensils,
+  Camera,
+  ClipboardList,
   Settings,
-  LogOut,
-  User
+  LogOut
 } from 'lucide-react';
 import { logout } from '../../utils/auth';
+import bedenganLogo from '../../assets/images/bedengan-logo.png';
+import { currentAdmin } from '../../data/mock/adminMock';
 
-export default function Sidebar({ isOpen, onClose }) {
+
+
+export default function Sidebar({ isOpen, onClose, pendingCount }) {
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -21,74 +23,66 @@ export default function Sidebar({ isOpen, onClose }) {
     navigate('/login');
   };
 
+  const navItems = [
+    { label: "Dashboard", path: "/admin/dashboard", icon: LayoutDashboard },
+    { label: "Rental Camping", path: "/admin/rental", icon: Tent },
+    { label: "Warung & Kuliner", path: "/admin/warung", icon: Utensils },
+    { label: "Fotografer", path: "/admin/fotografer", icon: Camera },
+    { label: "Pengajuan\nUsaha/Jasa", path: "/admin/pendaftaran", icon: ClipboardList, badge: pendingCount > 0 ? pendingCount : null }
+  ];
+
   return (
     <aside className={`sidebar ${isOpen ? 'open' : ''}`}>
       <div className="sidebar-header">
-        <div className="sidebar-logo-text">
-          <h2>BEDENGAN XPLORE</h2>
-          <span>Admin Panel</span>
+        <div className="sidebar-brand">
+          <img src={bedenganLogo} alt="Bedengan Xplore" className="brand-logo" />
+          <div className="brand-text">
+            <span className="brand-bedengan">BEDENGAN</span>
+            <span className="brand-xplore">XPLORE</span>
+          </div>
+        </div>
+        <div className="admin-panel-badge">
+          <span className="status-dot"></span> Admin Panel
         </div>
       </div>
 
       <nav className="sidebar-nav">
-        <div className="nav-section">
-          <div className="nav-section-title">Main</div>
-          <NavLink to="/admin/dashboard" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`} onClick={onClose}>
-            <LayoutDashboard size={20} />
-            Dashboard
+        {navItems.map((item, index) => (
+          <NavLink
+            key={index}
+            to={item.path}
+            className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
+            onClick={onClose}
+          >
+            <span className="icon-wrapper"><item.icon size={18} strokeWidth={2.5} /></span>
+            <span className="nav-label" style={{ whiteSpace: 'pre-line' }}>{item.label}</span>
+            {item.badge && <span className="nav-badge">{item.badge}</span>}
           </NavLink>
-        </div>
+        ))}
 
-        <div className="nav-section">
-          <div className="nav-section-title">Kawasan</div>
-          <NavLink to="/admin/kawasan" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`} onClick={onClose}>
-            <Map size={20} />
-            Kawasan Bedengan
-          </NavLink>
-        </div>
+        <div className="nav-divider"></div>
 
-        <div className="nav-section">
-          <div className="nav-section-title">Katalog</div>
-          <NavLink to="/admin/warung" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`} onClick={onClose}>
-            <UtensilsCrossed size={20} />
-            Warung & Kuliner
-          </NavLink>
-          <NavLink to="/admin/rental" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`} onClick={onClose}>
-            <Tent size={20} />
-            Rental Camping
-          </NavLink>
-          <NavLink to="/admin/fotografer" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`} onClick={onClose}>
-            <Camera size={20} />
-            Fotografer
-          </NavLink>
-        </div>
-
-        <div className="nav-section">
-          <div className="nav-section-title">Moderasi</div>
-          <NavLink to="/admin/pendaftaran" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`} onClick={onClose}>
-            <ClipboardList size={20} />
-            Pendaftaran Usaha/Jasa
-          </NavLink>
-        </div>
-
-        <div className="nav-section">
-          <div className="nav-section-title">System</div>
-          <NavLink to="/admin/settings" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`} onClick={onClose}>
-            <Settings size={20} />
-            Pengaturan
-          </NavLink>
-        </div>
+        <NavLink
+          to="/admin/settings"
+          className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
+          onClick={onClose}
+        >
+          <span className="icon-wrapper"><Settings size={18} strokeWidth={2.5} /></span>
+          <span className="nav-label">Pengaturan</span>
+        </NavLink>
       </nav>
 
       <div className="sidebar-footer">
-        <NavLink to="/admin/profile" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`} onClick={onClose}>
-          <User size={20} />
-          Admin Profile
-        </NavLink>
-        <button className="nav-item" onClick={handleLogout} style={{ width: '100%', textAlign: 'left' }}>
-          <LogOut size={20} />
-          Logout
-        </button>
+        <div className="profile-card">
+          <div className="profile-avatar">{currentAdmin.initials}</div>
+          <div className="profile-info">
+            <span className="profile-name">{currentAdmin.name}</span>
+            <span className="profile-role">{currentAdmin.role}</span>
+          </div>
+          <button className="logout-btn" onClick={handleLogout} title="Logout">
+            <LogOut size={18} strokeWidth={2.5} />
+          </button>
+        </div>
       </div>
     </aside>
   );

@@ -13,6 +13,7 @@ const getStorageData = () => {
 
 const setStorageData = (data) => {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  window.dispatchEvent(new Event('applications_updated'));
 };
 
 export const getApplications = () => Promise.resolve(getStorageData());

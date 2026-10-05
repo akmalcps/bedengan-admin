@@ -1,14 +1,10 @@
+import { currentAdmin } from '../data/mock/adminMock';
+
 const AUTH_KEY = 'bedengan_xplore_admin_auth';
 
 export const login = (email, password) => {
-  if (email === 'admin@bedenganxplore.test' && password === 'admin123') {
-    const user = {
-      name: 'Admin Bedengan',
-      email: email,
-      role: 'Super Admin',
-      avatar: 'https://ui-avatars.com/api/?name=Admin+Bedengan&background=85BB45&color=fff'
-    };
-    localStorage.setItem(AUTH_KEY, JSON.stringify(user));
+  if (email === currentAdmin.email && password === 'admin123') {
+    localStorage.setItem(AUTH_KEY, JSON.stringify(currentAdmin));
     return true;
   }
   return false;
@@ -24,5 +20,6 @@ export const isAuthenticated = () => {
 
 export const getUser = () => {
   const user = localStorage.getItem(AUTH_KEY);
-  return user ? JSON.parse(user) : null;
+  // Always override with currentAdmin to ensure single source of truth for the mock
+  return user ? currentAdmin : null;
 };
