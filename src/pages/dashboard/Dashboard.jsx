@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { UtensilsCrossed, Tent, Camera, ClipboardList, Plus, ChevronRight } from 'lucide-react';
 import { getDashboardStats, getPendingApplications, getRecentActivities } from '../../services/mock/dashboardService';
+import { formatRelativeTime } from '../../utils/format';
 import './Dashboard.css';
 
 export default function Dashboard() {
@@ -139,15 +140,21 @@ export default function Dashboard() {
           </div>
           <div className="section-content card">
             <ul className="activity-list">
-              {activities.map(act => (
-                <li key={act.id} className="activity-item">
-                  <div className="activity-dot"></div>
-                  <div className="activity-details">
-                    <p className="activity-message">{act.message}</p>
-                    <span className="activity-time">{act.time}</span>
-                  </div>
-                </li>
-              ))}
+              {activities.length > 0 ? (
+                activities.map(act => (
+                  <li key={act.id} className="activity-item">
+                    <div className="activity-dot"></div>
+                    <div className="activity-details">
+                      <p className="activity-message">{act.title} <strong>{act.description}</strong></p>
+                      <span className="activity-time">{formatRelativeTime(act.timestamp)} oleh {act.admin}</span>
+                    </div>
+                  </li>
+                ))
+              ) : (
+                <div className="empty-state">
+                  <p>Tidak ada aktivitas terbaru.</p>
+                </div>
+              )}
             </ul>
           </div>
         </div>

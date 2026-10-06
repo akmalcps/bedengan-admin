@@ -66,10 +66,10 @@ export default function KawasanDetail() {
       <div className="dashboard-grid-2">
         <div className="card" style={{ padding: '2rem' }}>
           <div style={{ display: 'flex', gap: '1.5rem', marginBottom: '2rem', alignItems: 'flex-start' }}>
-            <img 
-              src={kawasan.image || 'https://via.placeholder.com/150'} 
-              alt={kawasan.name} 
-              style={{ width: '120px', height: '120px', borderRadius: '16px', objectFit: 'cover' }} 
+            <img
+              src={kawasan.image || 'https://via.placeholder.com/150'}
+              alt={kawasan.name}
+              style={{ width: '120px', height: '120px', borderRadius: '16px', objectFit: 'cover' }}
             />
             <div>
               <div style={{ display: 'inline-block', background: 'rgba(133, 187, 69, 0.1)', color: 'var(--color-primary-dark)', padding: '4px 10px', borderRadius: '20px', fontSize: '0.75rem', fontWeight: 700, marginBottom: '0.5rem' }}>
@@ -102,7 +102,7 @@ export default function KawasanDetail() {
               ))}
             </div>
           </div>
-          
+
           <div style={{ background: 'var(--color-background)', padding: '2rem', borderRadius: '16px', textAlign: 'center', border: '2px dashed var(--color-border)' }}>
             <p style={{ color: 'var(--color-text-secondary)', fontWeight: 500 }}>[ Placeholder Denah / Peta Area ]</p>
             <p style={{ fontSize: '0.85rem', color: 'var(--color-text-muted)' }}>(Untuk prototype tidak ada peta aktif)</p>

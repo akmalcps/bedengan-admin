@@ -1,4 +1,5 @@
 import { initialRental } from '../../data/mock/rentalMock';
+import { createActivity } from './activityService';
 
 const STORAGE_KEY = 'bedengan_xplore_admin_rentals';
 
@@ -31,6 +32,14 @@ export const createRental = (rentalData) => {
     updatedAt: new Date().toISOString()
   };
   setStorageData([...data, newRental]);
+  
+  createActivity({
+    type: 'CREATE',
+    module: 'rental',
+    title: 'Menambahkan rental',
+    description: newRental.name
+  });
+
   return Promise.resolve(newRental);
 };
 
@@ -41,6 +50,14 @@ export const updateRental = (id, rentalData) => {
   if (index !== -1) {
     data[index] = { ...data[index], ...rentalData, updatedAt: new Date().toISOString() };
     setStorageData(data);
+
+    createActivity({
+      type: 'UPDATE',
+      module: 'rental',
+      title: 'Mengubah rental',
+      description: data[index].name
+    });
+
     return Promise.resolve(data[index]);
   }
   return Promise.reject(new Error('Rental not found'));
@@ -48,9 +65,23 @@ export const updateRental = (id, rentalData) => {
 
 export const deleteRental = (id) => {
   const data = getStorageData();
-  const filtered = data.filter(item => item.id !== id);
-  setStorageData(filtered);
-  return Promise.resolve(true);
+  const index = data.findIndex(item => item.id === id);
+  
+  if (index !== -1) {
+    const deletedName = data[index].name;
+    const filtered = data.filter(item => item.id !== id);
+    setStorageData(filtered);
+
+    createActivity({
+      type: 'DELETE',
+      module: 'rental',
+      title: 'Menghapus rental',
+      description: deletedName
+    });
+
+    return Promise.resolve(true);
+  }
+  return Promise.reject(new Error('Rental not found'));
 };
 
 export const toggleRentalStatus = (id) => {
@@ -61,6 +92,14 @@ export const toggleRentalStatus = (id) => {
     data[index].status = data[index].status === 'active' ? 'inactive' : 'active';
     data[index].updatedAt = new Date().toISOString();
     setStorageData(data);
+
+    createActivity({
+      type: 'UPDATE',
+      module: 'rental',
+      title: `Mengubah status rental menjadi ${data[index].status}`,
+      description: data[index].name
+    });
+
     return Promise.resolve(data[index]);
   }
   return Promise.reject(new Error('Rental not found'));

@@ -31,10 +31,6 @@ export const getPendingApplications = async () => {
 };
 
 export const getRecentActivities = async () => {
-  return [
-    { id: 1, message: 'Warung Soto Bedengan diperbarui', time: '10 menit yang lalu' },
-    { id: 2, message: 'Pendaftaran usaha baru masuk', time: '1 jam yang lalu' },
-    { id: 3, message: 'Alan Picture menambahkan jasa', time: '3 jam yang lalu' },
-    { id: 4, message: 'Bedengan Camp Rental menambah item', time: '1 hari yang lalu' }
-  ];
+  const { getRecentActivities: fetchActivities } = await import('./activityService.js');
+  return fetchActivities(5);
 };

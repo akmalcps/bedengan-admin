@@ -1,4 +1,5 @@
 import { initialApplication } from '../../data/mock/applicationMock';
+import { createActivity } from './activityService';
 
 const STORAGE_KEY = 'bedengan_xplore_admin_applications';
 
@@ -32,6 +33,14 @@ export const approveApplication = (id) => {
     data[index].status = 'Approved';
     data[index].updatedAt = new Date().toISOString();
     setStorageData(data);
+
+    createActivity({
+      type: 'APPROVE',
+      module: 'pengajuan',
+      title: 'Menyetujui pengajuan',
+      description: data[index].businessName
+    });
+
     return Promise.resolve(data[index]);
   }
   return Promise.reject(new Error('Application not found'));
@@ -46,6 +55,14 @@ export const rejectApplication = (id, reason) => {
     data[index].rejectionReason = reason;
     data[index].updatedAt = new Date().toISOString();
     setStorageData(data);
+
+    createActivity({
+      type: 'REJECT',
+      module: 'pengajuan',
+      title: 'Menolak pengajuan',
+      description: data[index].businessName
+    });
+
     return Promise.resolve(data[index]);
   }
   return Promise.reject(new Error('Application not found'));

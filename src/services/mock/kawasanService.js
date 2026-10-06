@@ -1,4 +1,5 @@
 import { initialKawasan } from '../../data/mock/kawasanMock';
+import { createActivity } from './activityService';
 
 const STORAGE_KEY = 'bedengan_xplore_admin_kawasan';
 
@@ -30,6 +31,14 @@ export const updateKawasan = (id, kawasanData) => {
   if (index !== -1) {
     data[index] = { ...data[index], ...kawasanData };
     setStorageData(data);
+
+    createActivity({
+      type: 'UPDATE',
+      module: 'kawasan',
+      title: 'Mengubah kawasan',
+      description: data[index].name
+    });
+
     return Promise.resolve(data[index]);
   }
   return Promise.reject(new Error('Kawasan not found'));
@@ -42,6 +51,14 @@ export const toggleKawasanStatus = (id) => {
   if (index !== -1) {
     data[index].status = data[index].status === 'active' ? 'inactive' : 'active';
     setStorageData(data);
+
+    createActivity({
+      type: 'UPDATE',
+      module: 'kawasan',
+      title: `Mengubah status kawasan menjadi ${data[index].status}`,
+      description: data[index].name
+    });
+
     return Promise.resolve(data[index]);
   }
   return Promise.reject(new Error('Kawasan not found'));
